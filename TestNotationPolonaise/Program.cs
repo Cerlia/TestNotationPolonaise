@@ -28,6 +28,56 @@ namespace TestNotationPolonaise
             return reponse;
         }
 
+        /// <summary> 
+        /// donne le résultat d'une formule en notation polonaise
+        /// </summary>
+        /// <param name="formule">formule en notation polonaise</param>
+        /// <returns>résultat</returns>
+        static float Polonaise(String formule)
+        {
+            // découpage de la chaîne reçue en entrée dans un tableau de chaînes
+            string[] tab = formule.Split(' ');
+            // calcul de la taille du tableau obtenu
+            int taille = tab.Length;
+            // boucle pour faire le calcul
+            try
+            {
+                for (int n = taille - 3; n >= 0; n--)
+                {
+                    if (tab[n] == "+" || tab[n] == "-" || tab[n] == "/" || tab[n] == "*")
+                    {
+                        switch(tab[n])
+                        {
+                            case "+":
+                                tab[n] = (float.Parse(tab[n + 1]) + float.Parse(tab[n + 2])).ToString();
+                                break;
+                            case "-":
+                                tab[n] = (float.Parse(tab[n + 1]) - float.Parse(tab[n + 2])).ToString();
+                                break;
+                            case "/":
+                                tab[n] = (float.Parse(tab[n + 1]) / float.Parse(tab[n + 2])).ToString();
+                                break;
+                            case "*":
+                                tab[n] = (float.Parse(tab[n + 1]) * float.Parse(tab[n + 2])).ToString();
+                                break;
+                        }
+                        // décalage de la fin du vecteur
+                        for (int i = n+1; i < taille - 2; i++)
+                        {
+                            tab[i] = tab[i + 2];
+                            tab[i + 2] = "";
+                        }
+                    }
+                }
+                tab[1] = tab[2] = "";
+                return float.Parse(tab[0]);
+            }
+            catch
+            {
+                return float.NaN;
+            }            
+        }
+
         /// <summary>
         /// Saisie de formules en notation polonaise pour tester la fonction de calcul
         /// </summary>
@@ -39,10 +89,10 @@ namespace TestNotationPolonaise
             do
             {
                 Console.WriteLine();
-                Console.WriteLine("entrez une formule polonaise en séparant chaque partie par un espace = ");
-                string laFormule = Console.ReadLine();
+                Console.WriteLine("Entrez une formule polonaise en séparant chaque partie par un espace = ");
+                String laFormule = Console.ReadLine();
                 // affichage du résultat
-                Console.WriteLine("Résultat =  " + Polonaise(laFormule));
+                Console.WriteLine("Résultat = " + Polonaise(laFormule));
                 reponse = saisie("Voulez-vous continuer ?", 'O', 'N');
             } while (reponse == 'O');
         }
